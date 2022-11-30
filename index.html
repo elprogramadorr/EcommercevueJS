@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PichonCommerce</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h3>PichonCommerce</h3>
+            <button class="cart">Carro(0)</button>
+            <div class="cart-content" v-show="cartOpen">
+                <div class="cart-content__product">
+                    <img v-bind:src="product.images[0].image" :alt="product.name">
+                    <span>{{product.name}} - {{new Intl.NumberFormat("en-us").format(product.price)}}</span> 
+                </div>
+                <div class="cart-content__product">
+                    <img :src="product.images[1].image" :alt="product.name">
+                    <span>{{product.name}} - {{new Intl.NumberFormat("en-us").format(product.price)}}</span> 
+                </div>
+            </div>
+        </header>
+        <main>
+            <section class="product">
+                <div class="product__thumbnails">
+                    <div class="thumb"
+                        :class="{active: activeImage==1}"
+                        :style="{backgroundImage: 'url(' +product.images[0].thumbnail+ ')'}"
+                    ></div>
+                    <div class="thumb"
+                        :class="{active: activeImage==1}"
+                        :style="{backgroundImage: 'url(' +product.images[1].thumbnail+ ')'}"
+                    ></div>
+                </div>
+                <div class="product__image">
+                    <img src="" alt="">
+                </div>
+            </section>
+            <section class="description">
+                <h4>{{product.name}} {{product.stock==0 ? "👀" : "😁"}}</h4>
+                <span class="badge new" v-if="product.new">Nuevo</span>
+                <span class="badge offer" v-if="product.offer">Oferta</span>
+                <p class="description__status" v-if="product.stock>=3"> Quedan pocos unidades, apurate!</p>
+                <p class="description__status" v-else-if="product.stock==1"> Queda una unidad</p>
+                <p class="description__status" v-else-if="product.stock==0"> No quedan unidades</p>
+                <p class="description__price"></p>
+                <p class="descripton__content"></p>
+                <div class="discount">
+                    <span>Codigo de Descuento:</span>
+                    <input type="text" placeholder="Ingrese un codigo!"/>
+                </div>
+                <button :disabled="product.stock==0">Agregar al carrito</button>
+            </section>
+        </main>
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const {createApp} = Vue 
+        const app = createApp({
+            data(){
+                return {
+                    product:{
+                        name: "Camara",
+                        price: 12345,
+                        stock: 0,
+                        content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laudantium qui et fugit neque tempora provident doloremque at, accusamus sequi voluptatibus, saepe vero ab ipsam culpa unde beatae, molestiae aut facilis!",
+                        images:[
+                            {
+                                image:"./imagenes/foto1.jpg",
+                                thumbnail:"./imagenes/foto3.jpg"
+                            },
+                            {
+                                image:"./imagenes/foto2.jpg",
+                                thumbnail:"./imagenes/foto2.jpg"
+                            }
+                        ],
+                        new: true,
+                        offer: true
+                    },
+                    activeImage: 0,
+                    cartOpen: true,
+
+                }
+            }
+        })
+        app.mount('#app')
+    </script>
+</body>
+</html>
