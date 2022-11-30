@@ -11,48 +11,49 @@
     <div id="app">
         <header>
             <h3>PichonCommerce</h3>
-            <button class="cart">Carro(0)</button>
+            <button class="cart" v-on:click="cartOpen = !cartOpen">Carro(0)</button>
             <div class="cart-content" v-show="cartOpen">
-                <div class="cart-content__product">
+                <div class="cart-content__product" v-for="(product,index) in cart" :key="product.name" :class="{'bg-gray':index&1}">
                     <img v-bind:src="product.images[0].image" :alt="product.name">
                     <span>{{product.name}} - {{new Intl.NumberFormat("en-us").format(product.price)}}</span> 
                 </div>
-                <div class="cart-content__product">
-                    <img :src="product.images[1].image" :alt="product.name">
-                    <span>{{product.name}} - {{new Intl.NumberFormat("en-us").format(product.price)}}</span> 
-                </div>
+                
             </div>
         </header>
         <main>
             <section class="product">
                 <div class="product__thumbnails">
-                    <div class="thumb"
-                        :class="{active: activeImage==1}"
-                        :style="{backgroundImage: 'url(' +product.images[0].thumbnail+ ')'}"
+                    <div 
+                        v-for="(image,index) in product.images"
+                        :key="image.thumbnail"
+                        class="thumb"
+                        :class="{active: activeImage==index}"
+                        :style="{backgroundImage: 'url(' +product.images[index].thumbnail+ ')'}"
+                        @click="activeImage = index"
                     ></div>
-                    <div class="thumb"
-                        :class="{active: activeImage==1}"
-                        :style="{backgroundImage: 'url(' +product.images[1].thumbnail+ ')'}"
-                    ></div>
+                    
                 </div>
                 <div class="product__image">
-                    <img src="" alt="">
+                    <img :src="product.images[activeImage].image" alt="product.name">
                 </div>
             </section>
             <section class="description">
                 <h4>{{product.name}} {{product.stock==0 ? "👀" : "😁"}}</h4>
+                <p>{{product.price}} $</p>
+                <br>
                 <span class="badge new" v-if="product.new">Nuevo</span>
                 <span class="badge offer" v-if="product.offer">Oferta</span>
-                <p class="description__status" v-if="product.stock>=3"> Quedan pocos unidades, apurate!</p>
+                <p v-show="product.offer">hola chicassss</p>
+                <p class="description__status" v-if="product.stock>=2"> Quedan pocos unidades, apurate!</p>
                 <p class="description__status" v-else-if="product.stock==1"> Queda una unidad</p>
                 <p class="description__status" v-else-if="product.stock==0"> No quedan unidades</p>
                 <p class="description__price"></p>
                 <p class="descripton__content"></p>
                 <div class="discount">
                     <span>Codigo de Descuento:</span>
-                    <input type="text" placeholder="Ingrese un codigo!"/>
+                    <input type="text" placeholder="Ingrese un codigo!" @keyup.enter="product.price=product.price/2"/>
                 </div>
-                <button :disabled="product.stock==0">Agregar al carrito</button>
+                <button :disabled="product.stock==0" @click="product.stock-=1">Agregar al carrito</button>
             </section>
         </main>
     </div>
@@ -65,7 +66,7 @@
                     product:{
                         name: "Camara",
                         price: 12345,
-                        stock: 0,
+                        stock: 3,
                         content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laudantium qui et fugit neque tempora provident doloremque at, accusamus sequi voluptatibus, saepe vero ab ipsam culpa unde beatae, molestiae aut facilis!",
                         images:[
                             {
@@ -78,10 +79,48 @@
                             }
                         ],
                         new: true,
-                        offer: true
+                        offer: false
                     },
-                    activeImage: 0,
-                    cartOpen: true,
+                    activeImage: 1,
+                    cartOpen: false,
+                    cart: [
+                        {
+                            name: "Camara",
+                            price: 12345,
+                            stock: 3,
+                            content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laudantium qui et fugit neque tempora provident doloremque at, accusamus sequi voluptatibus, saepe vero ab ipsam culpa unde beatae, molestiae aut facilis!",
+                            images:[
+                                {
+                                    image:"./imagenes/foto1.jpg",
+                                    thumbnail:"./imagenes/foto3.jpg"
+                                },
+                                {
+                                    image:"./imagenes/foto2.jpg",
+                                    thumbnail:"./imagenes/foto2.jpg"
+                                }
+                            ],
+                            new: true,
+                            offer: false
+                        },
+                        {
+                            name: "Camara Epson",
+                            price: 1254,
+                            stock: 5,
+                            content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laudantium qui et fugit neque tempora provident doloremque at, accusamus sequi voluptatibus, saepe vero ab ipsam culpa unde beatae, molestiae aut facilis!",
+                            images:[
+                                {
+                                    image:"./imagenes/foto1.jpg",
+                                    thumbnail:"./imagenes/foto3.jpg"
+                                },
+                                {
+                                    image:"./imagenes/foto2.jpg",
+                                    thumbnail:"./imagenes/foto2.jpg"
+                                }
+                            ],
+                            new: true,
+                            offer: false
+                        }
+                    ]
 
                 }
             }
