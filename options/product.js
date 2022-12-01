@@ -17,11 +17,11 @@ app.component("product",{
             </div>
         </section>
         <section class="description">
-            <h4>{{product.name}} {{product.stock==0 ? "👀" : "😁"}}</h4>
-            <p>{{product.price}} $</p>
-            <br>
-            <span class="badge new" v-if="product.new">Nuevo</span>
-            <span class="badge offer" v-if="product.offer">Oferta</span>
+            <h4>{{ product.name.toUpperCase() }} {{ product.stock == 0 ? "😣" : "😀" }}</h4>
+
+            <badge :product="product"></badge>
+            
+            <p class="description__status" v-if="product.stock == 3">Quedan pocas unidades</p>
             <p v-show="product.offer">hola chicassss</p>
             <p class="description__status" v-if="product.stock>=2"> Quedan pocos unidades, apurate!</p>
             <p class="description__status" v-else-if="product.stock==1"> Queda una unidad</p>
