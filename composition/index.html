@@ -59,56 +59,58 @@
     </div>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
-        const {createApp, ref} = Vue 
+        const {createApp, ref, reactive, toRefs} = Vue 
         const app = createApp({
             setup(){
-                const product = ref({
-                    name: "Camara",
-                    price: 12345,
-                    stock: 3,
-                    content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laudantium qui et fugit neque tempora provident doloremque at, accusamus sequi voluptatibus, saepe vero ab ipsam culpa unde beatae, molestiae aut facilis!",
-                    images:[
-                        {
-                            image:"./imagenes/foto1.jpg",
-                            thumbnail:"./imagenes/foto3.jpg"
-                        },
-                        {
-                            image:"./imagenes/foto2.jpg",
-                            thumbnail:"./imagenes/foto2.jpg"
-                        }
-                    ],
-                    new: true,
-                    offer: false
+                const productState = reactive ({
+                    product: {
+                        name: "Camara",
+                        price: 12345,
+                        stock: 3,
+                        content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laudantium qui et fugit neque tempora provident doloremque at, accusamus sequi voluptatibus, saepe vero ab ipsam culpa unde beatae, molestiae aut facilis!",
+                        images:[
+                            {
+                                image:"./imagenes/foto1.jpg",
+                                thumbnail:"./imagenes/foto3.jpg"
+                            },
+                            {
+                                image:"./imagenes/foto2.jpg",
+                                thumbnail:"./imagenes/foto2.jpg"
+                            }
+                        ],
+                        new: true,
+                        offer: false
+                    },
+                    activeImage: 0,
                 });
-
-                const activeImage=ref(0);
-                const cartOpen=ref(false);
-                const cart=ref([]);
-                const discountCodes=ref(["dlfldf","adaug"]);
+                const cartState = reactive({
+                    cartOpen: false,
+                    cart:[]
+                });
+                const discountCodes=ref(["bebita","adaug"]);
                 function applyDiscount(event){
                     var discountCodeIndex = discountCodes.value.indexOf(event.target.value);
                     if (discountCodeIndex>=0){
-                        product.value.price/=2;
+                        productState.product.price/=2;
                         discountCodes.value.splice(discountCodeIndex,1)
                     }
                 }
                 function addToCart(){
-                    const productIndex = cart.value.indexOf(prod => prod.name == product.value.name);
+                    const productIndex = cartState.cart.indexOf(prod => prod.name == productState.product.name);
                     if(productIndex<0){
-                        cart.value.push(product.value);
+                        cartState.cart.push(productState.product);
                     }else{
-                        cart.value[productIndex].quantity+=1;
+                        cartState.cart[productIndex].quantity+=1;
                     }
-                    product.value.stock-=1;
+                    productState.product.stock-=1;
                 }
                 setTimeout(() => {
-                    activeImage.value=1;
+                    productState.activeImage=1;
                 },2000);
                 return {
-                    product,
-                    activeImage,
-                    cartOpen,
-                    cart,
+                    ...toRefs(productState),
+
+                    ...toRefs(cartState),
                     applyDiscount,
                     addToCart
                 };
